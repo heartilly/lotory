@@ -1,0 +1,6 @@
+function init(){
+alert("sdf")
+	$(".delMe").bind("click",function(){
+	$(this).parent().parent().remove();
+	})
+}
