@@ -41,25 +41,26 @@ var 	SITE_INFO ={
 		}
 	},
 	aj = {
-	requestCrossDomain : function( site,xpath,charCode,callback, obj) {
+	requestCrossDomain : function( yql,callback) {
+	//alert("ajaxing")
        	// If no url was passed, exit.
-       	if ( !site ) {
+       	if ( !yql ) {
        	   alert('No site was passed.');
       	    return false;
        	}
-       	// Take the provided url, and add it to a YQL query. Make sure you encode it!
-       	var yql = 'http://query.yahooapis.com/v1/public/yql?q=' + encodeURIComponent('select * from html where url="' + site + '" AND xpath="'+ xpath +'" AND charset="'+charCode+'"') +'&format=xml&callback=?';
+       	// Take thecallbackcallback provided url, and add it to a YQL query. Make sure you encode it!
+       	//var yql = 'http://query.yahooapis.com/v1/public/yql?q=' + encodeURIComponent('select * from html where url="' + site + '" AND xpath="'+ xpath +'" AND charset="'+charCode+'"') +'&format=json&callback=?';
        	//console.log(yql)
        	// Request that YSQL string, and run a callback function.
        	// Pass a defined function to prevent cache-busting.
        	$.getJSON( yql, function cbFunc(data) {
 		  	//console.log(data.query.results);
-		  	if (data.results) {
-				data = data.results;
+		  	if (data.query.results) {
+				data = data.query.results;
 				// If the user passed a callback, and it
 				// is a function, call it, and send through the data var.
 				if ( typeof callback === 'function') {
-					callback(data,obj);
+					callback(data);
 				}
 		  	}
 			// Else, Maybe we requested a site that doesn't exist, and nothing returned.
@@ -69,12 +70,48 @@ var 	SITE_INFO ={
        	}
 		);
 	},
+	success : function(results){
+	
+		
+		console.log(results)
+	},
 	load1 : function() {
 		aj.requestCrossDomain(SITE_INFO.magnum.url,SITE_INFO.magnum.xpath,SITE_INFO.magnum.charset,function(results){
 		console.log(results);
 		var g = results
 		})	
+	},
+	load2 : function() {
+		$('#test').ajaxStart(function(){
+ 		  $(this).hide();
+		 });
+		var ax = new ajx(SITE_INFO.magnum);
+		//$.get('page.html&callback=?',function(d){alert(d)});
+		console.log(ax.site);
+		console.log(ax.yql);
+		//console.log(ax.ajxr);
+		/* * /
+		aj.requestCrossDomain(ax.yql,function(results){
+			console.log(results);
+			})
+		/* */
+		
 	}
-	}
-aj.load1()
+	},
+	ajx = function(SITE){
+		this.site = SITE;
+       	this.yql = 'http://query.yahooapis.com/v1/public/yql?q=' + encodeURIComponent('select * from html where url="' + SITE.url + '" AND xpath="'+ SITE.xpath +'" AND charset="'+SITE.charset+'"') +'&format=json&callback=?';
+       	/* * /
+       	this.ajxr = aj.requestCrossDomain(this.yql,function(results){
+       		//console.log(results);
+			return results;
+			})
+		/* */
+       	/* */
+       	this.ajxr = aj.requestCrossDomain(this.yql,aj.success)
+		/* */
+		}
+	
+	
+aj.load2()
 
