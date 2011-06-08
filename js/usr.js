@@ -3,8 +3,8 @@ var 	_SITE ={
 			nn:"PMP",
 			url:'http://www.pmp.com.my/english/1_3d/3D_main.asp',
 			charset:'iso-8859-1',
-			pmpDrawDateVari:3,
-			pmpResultVari:26
+			xpath:'//strong',
+			xCheck:41
 		},
 		SG4DN: {
 			nn:"SG4D",
@@ -26,9 +26,6 @@ var 	_SITE ={
 			xObj:'strong',			
 			xpath:'//strong',
 			xCheck:33
-			// YQL
-			// select * from html where url="http://www.live4d.com/live4d/4dlive1.htm" AND xpath="//strong" AND charset="UTF-16"
-			// Verificasion condition
 		},
 		TOTO:{
 			nn:"d",
@@ -46,34 +43,11 @@ var 	_SITE ={
 		}
 	},
 	aj = {
-	requestCrossDomain : function( yql,callback) {
-	//alert("ajaxing")
-       	// If no url was passed, exit.
-       	if ( !yql ) {
-       	   alert('No site was passed.');
-      	    return false;
-       	}
-       	// Take thecallbackcallback provided url, and add it to a YQL query. Make sure you encode it!
-       	//var yql = 'http://query.yahooapis.com/v1/public/yql?q=' + encodeURIComponent('select * from html where url="' + site + '" AND xpath="'+ xpath +'" AND charset="'+charCode+'"') +'&format=json&callback=?';
-       	//console.log(yql)
-       	// Request that YSQL string, and run a callback function.
-       	// Pass a defined function to prevent cache-busting.
-       	$.getJSON( yql, function cbFunc(data) {
-		  	//console.log(data.query.results);
-		  	if (data.query.results) {
-				data = data.query.results;
-				// If the user passed a callback, and it
-				// is a function, call it, and send through the data var.
-				if ( typeof callback === 'function') {
-					callback(data);
-				}
-		  	}
-			// Else, Maybe we requested a site that doesn't exist, and nothing returned.
-			else throw new Error('Nothing returned from getJSON.');
-			/* */
-			//http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20html%20where%20url%3D%22http%3A%2F%2Fwww.live4d.com%2Flive4d%2F4dlive1.htm%22%20AND%20xpath%3D%22%2F%2Fstrong%22%20AND%20charset%3D%22UTF-16%22
-       	}
-		);
+	getDateRegexp : function(raw){
+		var getDateRegexp=/(\d+)\/(\d+)\/(\d+)/ig,
+		date = getDateRegexp.exec(raw);
+		return new Date(date[3],date[2]-1,date[1]);
+		
 	},
 	xchk : function(SITE,objLength){
 		if(objLength===SITE.xCheck){
@@ -94,33 +68,98 @@ var 	_SITE ={
 		var g = results
 		})	
 	},
-	load2 : function() {
-		$('#test').ajaxStart(function(){
- 		  $(this).hide();
-		 });
-		var SITE = _SITE.MAG4D,
-			ax = new ajx(SITE, function(data){
+	doPMP : function() {
+		var SITE = _SITE.PMP,
+			ax = new aj.ajx(SITE, function(data){
+			console.log(data)
 			// Virify		
-			var i = data.strong.length,obj = data.strong.reverse();
+			var i = data.strong.length,obj = data.strong.reverse(),
+				MAG = {
+					consolation:[],
+					special:[]},
+				dNoRegxp = /(?:dra[^\:]*?:\s)|\s*/ig;
+
 			aj.xchk(SITE,i);
-      			console.log(obj)
+
+			MAG.dDate = aj.getDateRegexp(obj[39]);
+			MAG.dNo = obj[38].replace(dNoRegxp,'');
+			MAG.venue = obj[37];
+			MAG.first = obj[27];
+			MAG.second = obj[25];
+			MAG.third = obj[23];
+			MAG.first3 = obj[34];
+			MAG.second3 = obj[32];
+			MAG.third3 = obj[30];
+			
       	while(i--) {
-      		if(i){}
+      		console.log("obj "+i+" = "+obj[i]);
+      		if(i < 22 & i > 0 & i!=11){
+		  		if(i < 11){
+		  			MAG.consolation.push(obj[i]);
+		  		}else if(i < 22){
+		  			MAG.special.push(obj[i]);
+		  		}
+      			}
       		}
-			console.log("ax.results = " + ax.results)
-			console.log("ax = " + ax.length)
+      		console.log("dDate = " + MAG.dDate)
+      		console.log("dNo = " + MAG.dNo)
+      		console.log("First3 = " + MAG.first3)
+      		console.log("Second3 = " + MAG.second3)
+      		console.log("Third3 = " + MAG.third3)
+      		console.log("First = " + MAG.first)
+      		console.log("Second = " + MAG.second)
+      		console.log("Third = " + MAG.third)
+      		console.log("special = " + MAG.special)
+      		console.log("consolation = " + MAG.consolation)
 			},"data.strong");
 		console.log(ax.site);
-		/* * /
-		aj.requestCrossDomain(ax.yql,function(results){
-			console.log(results);
-			})
-		/* */
 		console.log(ax.yql);
 		
-	}
 	},
-	ajx = function(SITE,callback,xyz){
+	doMag4d : function() {
+		var SITE = _SITE.MAG4D,
+			ax = new ajx(SITE, function(data){
+			console.log(data)
+			// Virify		
+			var i = data.strong.length,obj = data.strong.reverse(),
+				MAG = {
+					dDate:'',dNo:'',
+					consolation:[],
+					special:[]},
+				dNoRegxp = /(?:dra[^\:]*?:\s)|\s*/ig;
+
+			aj.xchk(SITE,i);
+
+			MAG.dDate = aj.getDateRegexp(obj[31].font.content);
+			MAG.dNo = obj[32].font.content.replace(dNoRegxp,'');
+			MAG.first = obj[28];
+			MAG.second = obj[26];
+			MAG.third = obj[24];
+			
+      	while(i--) {
+      		console.log("obj "+i+" = "+obj[i]);
+      		if(i < 24 & i > 1 & i!=12){
+		  		if(i < 12){
+		  			MAG.consolation.push(obj[i]);
+		  		}else if(i < 23){
+		  			MAG.special.push(obj[i]);
+		  		}
+      			}
+      		}
+      		console.log("dDate = " + MAG.dDate)
+      		console.log("dNo = " + MAG.dNo)
+      		console.log("First = " + MAG.first)
+      		console.log("Second = " + MAG.second)
+      		console.log("Third = " + MAG.third)
+      		console.log("consolation = " + MAG.consolation)
+      		console.log("special = " + MAG.special)
+			},"data.strong");
+		console.log(ax.site);
+		console.log(ax.yql);
+		
+	},
+	
+	ajx : function(SITE,callback,xyz){
 		//this.site = SITE;
        	this.yql = 'http://query.yahooapis.com/v1/public/yql?q=' + encodeURIComponent('select * from html where url="' + SITE.url + '" AND xpath="'+ SITE.xpath +'" AND charset="'+SITE.charset+'"') +'&format=json&callback=?';
        	this.ajxr = $.getJSON( this.yql, function cbFunc(data) {
@@ -136,10 +175,9 @@ var 	_SITE ={
 			   		});
 		
 		   		},
-	rslt = function(){
+	rslt : function(){
 		
 	}
-	
-	
-aj.load2()
+	}
+aj.doPMP()
 
