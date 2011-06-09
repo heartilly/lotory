@@ -8,16 +8,16 @@ var 	_SITE ={
 		},
 		SG4DN: {
 			nn:"SG4D",
-			url:'ddf',
+			url:'http://www.singaporepools.com.sg',
 			charset:'iso-8859-1',
-			sg4dLastestDateVari:1,
-			sg4dResultTopVari:3,
-			sg4dResultVari:20
+			xpath:"//td[@class='resultssectiontext4Dtop3' or @class='normal10' or @class='resultssectiontext4D']/p",
+			xCheck:24
 		},
 		SG4D: {
 			nn:"",
 			url:'http://www.singaporepools.com.sg/Lottery?page=four_d',
-			charset:'iso-8859-1'
+			charset:'iso-8859-1',
+			xpath:'//option[position() = 2]'
 		},
 		MAG4D: {
 			nn:"MAG4D",
@@ -111,19 +111,18 @@ var 	_SITE ={
       		console.log("Third = " + MAG.third)
       		console.log("special = " + MAG.special)
       		console.log("consolation = " + MAG.consolation)
-			},"data.strong");
+			});
 		console.log(ax.site);
 		console.log(ax.yql);
 		
 	},
 	doMag4d : function() {
 		var SITE = _SITE.MAG4D,
-			ax = new ajx(SITE, function(data){
+			ax = new aj.ajx(SITE, function(data){
 			console.log(data)
 			// Virify		
 			var i = data.strong.length,obj = data.strong.reverse(),
 				MAG = {
-					dDate:'',dNo:'',
 					consolation:[],
 					special:[]},
 				dNoRegxp = /(?:dra[^\:]*?:\s)|\s*/ig;
@@ -153,13 +152,66 @@ var 	_SITE ={
       		console.log("Third = " + MAG.third)
       		console.log("consolation = " + MAG.consolation)
       		console.log("special = " + MAG.special)
-			},"data.strong");
+			});
 		console.log(ax.site);
 		console.log(ax.yql);
 		
 	},
-	
-	ajx : function(SITE,callback,xyz){
+	doSG4D : function() {
+		var SITE = _SITE.SG4D;
+			aj.ajx(SITE, function(data){
+			
+				console.log(data);
+				console.log(data.option.value);
+				var SITE = _SITE.SG4DN;
+				SITE.url += data.option.value;
+				
+				SITE.data = {dDate:aj.getDateRegexp(data.option.content)};
+				console.log("url = " +SITE.url);
+				console.log("data = " +SITE.data.dDate);
+			
+				aj.ajx(SITE, function(data,SITE){
+				console.log(data);
+			
+				// Virify		
+				var i = data.p.length,obj = data.p.reverse(),
+					MAG = {
+						dDate:SITE.data.dDate,
+						consolation:[],
+						special:[]},
+					dNoRegxp = /dra.*?(\d*?)\s?<br\/>(.*)/ig
+				aj.xchk(SITE,i);
+				console.log(obj[23].content)
+				//MAG.dDate = aj.getDateRegexp(obj[31].font.content);
+				MAG.dNo = dNoRegxp.exec(obj[23].content);
+				MAG.first = obj[22];
+				MAG.second = obj[21];
+				MAG.third = obj[20];
+			
+		  	while(i--) {
+		  		console.log("obj "+i+" = "+obj[i]);
+		  		if(i < 20 & i >= 0 ){
+			  		if(i < 10){
+			  			MAG.consolation.push(obj[i]);
+			  		}else if(i < 20){
+			  			MAG.special.push(obj[i]);
+			  		}
+		  			}
+		  		}
+		  		console.log("dDate = " + MAG.dDate)
+		  		console.log("dNo = " + MAG.dNo[1])
+		  		console.log("First = " + MAG.first)
+		  		console.log("Second = " + MAG.second)
+		  		console.log("Third = " + MAG.third)
+		  		console.log("consolation = " + MAG.consolation)
+		  		console.log("special = " + MAG.special)
+				});
+			});
+		//console.log(ax.site);
+		//console.log(ax.yql);
+		
+	},	
+	ajx : function(SITE,callback){
 		//this.site = SITE;
        	this.yql = 'http://query.yahooapis.com/v1/public/yql?q=' + encodeURIComponent('select * from html where url="' + SITE.url + '" AND xpath="'+ SITE.xpath +'" AND charset="'+SITE.charset+'"') +'&format=json&callback=?';
        	this.ajxr = $.getJSON( this.yql, function cbFunc(data) {
@@ -167,7 +219,7 @@ var 	_SITE ={
 				  	if (data.query.results) {
 						data = data.query.results;
 						// If the user passed a callback, and it
-							callback(data);
+							callback(data,SITE);
        					}
 				  
 					// Else, Maybe we requested a site that doesn't exist, and nothing returned.
@@ -179,5 +231,5 @@ var 	_SITE ={
 		
 	}
 	}
-aj.doPMP()
+aj.doSG4D()
 
