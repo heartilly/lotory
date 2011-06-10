@@ -3,6 +3,7 @@ var 	_SITE ={
 			nn:"PMP",
 			url:'http://www.pmp.com.my/english/1_3d/3D_main.asp',
 			charset:'iso-8859-1',
+			query:'',
 			xpath:'//strong',
 			xCheck:41
 		},
@@ -10,6 +11,7 @@ var 	_SITE ={
 			nn:"SG4D",
 			url:'http://www.singaporepools.com.sg',
 			charset:'iso-8859-1',
+			query:'',
 			xpath:"//td[@class='resultssectiontext4Dtop3' or @class='normal10' or @class='resultssectiontext4D']/p",
 			xCheck:24
 		},
@@ -17,6 +19,7 @@ var 	_SITE ={
 			nn:"",
 			url:'http://www.singaporepools.com.sg/Lottery?page=four_d',
 			charset:'iso-8859-1',
+			query:'',
 			xpath:'//option[position() = 2]'
 		},
 		MAG4D: {
@@ -25,21 +28,23 @@ var 	_SITE ={
 			charset:'UTF-16',
 			xObj:'strong',			
 			xpath:'//strong',
+			query:'',
 			xCheck:33
 		},
 		TOTO:{
 			nn:"d",
 			url:'http://www.sportstoto.com.my/g_past_results/main.asp',
 			charset:'UTF-8',
+			xpath:"//a[@class='DataLink']",
+			query:" | reverse() | tail(count=2)"
 		},
 		TOTON: {
 			nn:"TOTO",
-			url:'totourl',
+			url:'http://www.sportstoto.com.my/g_past_results/',
 			charset:'UTF-8',
-			// Verificasion condition
-			avari:81,
-			bvari:22,
-			jackvari:5
+			query:'',
+			xpath:"//span[@class='dataResultA' or @class='dataResultB' or @class='dataJackPrize']",
+			xCheck:56
 		}
 	},
 	aj = {
@@ -114,7 +119,6 @@ var 	_SITE ={
 			});
 		console.log(ax.site);
 		console.log(ax.yql);
-		
 	},
 	doMag4d : function() {
 		var SITE = _SITE.MAG4D,
@@ -179,11 +183,12 @@ var 	_SITE ={
 						dDate:SITE.data.dDate,
 						consolation:[],
 						special:[]},
-					dNoRegxp = /dra.*?(\d*?)\s?<br\/>(.*)/ig
+					dNoRegxp = /\d{4}\s?/ig
 				aj.xchk(SITE,i);
 				console.log(obj[23].content)
 				//MAG.dDate = aj.getDateRegexp(obj[31].font.content);
-				MAG.dNo = dNoRegxp.exec(obj[23].content);
+				//MAG.dNo = dNoRegxp.exec(obj[23].content);
+				MAG.dNo = obj[23].content.match(dNoRegxp);
 				MAG.first = obj[22];
 				MAG.second = obj[21];
 				MAG.third = obj[20];
@@ -199,7 +204,7 @@ var 	_SITE ={
 		  			}
 		  		}
 		  		console.log("dDate = " + MAG.dDate)
-		  		console.log("dNo = " + MAG.dNo[1])
+		  		console.log("dNo = " + MAG.dNo)
 		  		console.log("First = " + MAG.first)
 		  		console.log("Second = " + MAG.second)
 		  		console.log("Third = " + MAG.third)
@@ -210,10 +215,75 @@ var 	_SITE ={
 		//console.log(ax.site);
 		//console.log(ax.yql);
 		
-	},	
+	},
+	doTOTO : function() {
+		var SITE = _SITE.TOTO;
+			aj.ajx(SITE, function(data){
+			
+				console.log(data);
+				console.log(data.a[0].href);
+				var SITE = _SITE.TOTON;
+				SITE.url += data.a[0].href;
+				
+				SITE.data = {dDate:aj.getDateRegexp(data.a[0].content),
+							dNo:data.a[1].content};
+				console.log("url = " +SITE.url);
+				console.log("data = " +SITE.data.dDate);
+				console.log("data = " +SITE.data.dNo);
+			
+				aj.ajx(SITE, function(data,SITE){
+				console.log(data);
+			
+				// Virify		
+				var i = data.span.length,obj = data.span.reverse(),
+					MAG = {
+						dDate:SITE.data.dDate,
+						consolation:[],
+						special:[]},
+					dNoRegxp = /\d{4}\s?/ig
+				aj.xchk(SITE,i);
+				console.log(obj[23].content)
+				//MAG.dDate = aj.getDateRegexp(obj[31].font.content);
+				//MAG.dNo = dNoRegxp.exec(obj[23].content);
+				MAG.dNo = obj[23].content.match(dNoRegxp);
+				MAG.first = obj[22];
+				MAG.second = obj[21];
+				MAG.third = obj[20];
+			
+		  	while(i--) {
+		  		console.log("obj "+i+" = "+obj[i]);
+		  		if(i < 20 & i >= 0 ){
+			  		if(i < 10){
+			  			MAG.consolation.push(obj[i]);
+			  		}else if(i < 20){
+			  			MAG.special.push(obj[i]);
+			  		}
+		  			}
+		  		}
+		  		console.log("dDate = " + MAG.dDate)
+		  		console.log("dNo = " + MAG.dNo)
+		  		console.log("First = " + MAG.first)
+		  		console.log("Second = " + MAG.second)
+		  		console.log("Third = " + MAG.third)
+		  		console.log("consolation = " + MAG.consolation)
+		  		console.log("special = " + MAG.special)
+				});
+			});
+		//console.log(ax.site);
+		//console.log(ax.yql);
+		
+	},		
 	ajx : function(SITE,callback){
 		//this.site = SITE;
+		
+       		this.yql = 'http://query.yahooapis.com/v1/public/yql?q=' + encodeURIComponent('select * from html where url="' + SITE.url + '" AND xpath="'+ SITE.xpath +'" AND charset="'+SITE.charset+'"'+SITE.query) +'&format=json&callback=?';
+       	/* * /
+       if(SITE.query){
+       		this.yql = 'http://query.yahooapis.com/v1/public/yql?q=' + encodeURIComponent('select * from html where url="' + SITE.url + '" AND xpath="'+ SITE.xpath +'" AND charset="'+SITE.charset+'"'+SITE.query) +'&format=json&callback=?';
+			}else{
        	this.yql = 'http://query.yahooapis.com/v1/public/yql?q=' + encodeURIComponent('select * from html where url="' + SITE.url + '" AND xpath="'+ SITE.xpath +'" AND charset="'+SITE.charset+'"') +'&format=json&callback=?';
+       		}
+       	/* */
        	this.ajxr = $.getJSON( this.yql, function cbFunc(data) {
 				  	//console.log(data.query.results);
 				  	if (data.query.results) {
@@ -231,5 +301,5 @@ var 	_SITE ={
 		
 	}
 	}
-aj.doSG4D()
+aj.doTOTO()
 
