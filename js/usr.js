@@ -36,7 +36,7 @@ var 	_SITE ={
 			url:'http://www.sportstoto.com.my/g_past_results/main.asp',
 			charset:'UTF-8',
 			xpath:"//a[@class='DataLink']",
-			query:" | reverse() | tail(count=2)"
+			query:""
 		},
 		TOTON: {
 			nn:"TOTO",
@@ -241,14 +241,14 @@ var 	_SITE ={
 						consolation:[],
 						special:[]},
 					dNoRegxp = /\d{4}\s?/ig
-				aj.xchk(SITE,i);
+				//aj.xchk(SITE,i);
 				console.log(obj[23].content)
 				//MAG.dDate = aj.getDateRegexp(obj[31].font.content);
 				//MAG.dNo = dNoRegxp.exec(obj[23].content);
-				MAG.dNo = obj[23].content.match(dNoRegxp);
-				MAG.first = obj[22];
-				MAG.second = obj[21];
-				MAG.third = obj[20];
+				//MAG.dNo = obj[23].content.match(dNoRegxp);
+				//MAG.first = obj[22];
+				//MAG.second = obj[21];
+				//MAG.third = obj[20];
 			
 		  	while(i--) {
 		  		console.log("obj "+i+" = "+obj[i]);
