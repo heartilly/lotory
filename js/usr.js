@@ -36,7 +36,7 @@ var 	_SITE ={
 			url:'http://www.sportstoto.com.my/g_past_results/main.asp',
 			charset:'UTF-8',
 			xpath:"//a[@class='DataLink']",
-			query:""
+			query:" | truncate(count=2)"
 		},
 		TOTON: {
 			nn:"TOTO",
@@ -44,13 +44,18 @@ var 	_SITE ={
 			charset:'UTF-8',
 			query:'',
 			xpath:"//span[@class='dataResultA' or @class='dataResultB' or @class='dataJackPrize']",
-			xCheck:56
+			xCheck:122
 		}
 	},
 	aj = {
+	getContent : function(array,newArray){
+		var i = array.length, obj = array.reverse();
+		while(i--){newArray.push(obj[i].content)}	
+	},
 	getDateRegexp : function(raw){
 		var getDateRegexp=/(\d+)\/(\d+)\/(\d+)/ig,
 		date = getDateRegexp.exec(raw);
+		console.log(date)
 		return new Date(date[3],date[2]-1,date[1]);
 		
 	},
@@ -97,7 +102,7 @@ var 	_SITE ={
 			MAG.third3 = obj[30];
 			
       	while(i--) {
-      		console.log("obj "+i+" = "+obj[i]);
+      		//console.log("obj "+i+" = "+obj[i]);
       		if(i < 22 & i > 0 & i!=11){
 		  		if(i < 11){
 		  			MAG.consolation.push(obj[i]);
@@ -120,7 +125,7 @@ var 	_SITE ={
 		console.log(ax.site);
 		console.log(ax.yql);
 	},
-	doMag4d : function() {
+	doMAG4D : function() {
 		var SITE = _SITE.MAG4D,
 			ax = new aj.ajx(SITE, function(data){
 			console.log(data)
@@ -140,7 +145,7 @@ var 	_SITE ={
 			MAG.third = obj[24];
 			
       	while(i--) {
-      		console.log("obj "+i+" = "+obj[i]);
+      		//console.log("obj "+i+" = "+obj[i]);
       		if(i < 24 & i > 1 & i!=12){
 		  		if(i < 12){
 		  			MAG.consolation.push(obj[i]);
@@ -157,16 +162,12 @@ var 	_SITE ={
       		console.log("consolation = " + MAG.consolation)
       		console.log("special = " + MAG.special)
 			});
-		console.log(ax.site);
-		console.log(ax.yql);
-		
 	},
 	doSG4D : function() {
 		var SITE = _SITE.SG4D;
 			aj.ajx(SITE, function(data){
 			
-				console.log(data);
-				console.log(data.option.value);
+				//console.log(data);
 				var SITE = _SITE.SG4DN;
 				SITE.url += data.option.value;
 				
@@ -194,7 +195,7 @@ var 	_SITE ={
 				MAG.third = obj[20];
 			
 		  	while(i--) {
-		  		console.log("obj "+i+" = "+obj[i]);
+		  		//console.log("obj "+i+" = "+obj[i]);
 		  		if(i < 20 & i >= 0 ){
 			  		if(i < 10){
 			  			MAG.consolation.push(obj[i]);
@@ -212,8 +213,6 @@ var 	_SITE ={
 		  		console.log("special = " + MAG.special)
 				});
 			});
-		//console.log(ax.site);
-		//console.log(ax.yql);
 		
 	},
 	doTOTO : function() {
@@ -225,8 +224,8 @@ var 	_SITE ={
 				var SITE = _SITE.TOTON;
 				SITE.url += data.a[0].href;
 				
-				SITE.data = {dDate:aj.getDateRegexp(data.a[0].content),
-							dNo:data.a[1].content};
+				SITE.data = {dDate:aj.getDateRegexp(data.a[1].content),
+							dNo:data.a[0].content};
 				console.log("url = " +SITE.url);
 				console.log("data = " +SITE.data.dDate);
 				console.log("data = " +SITE.data.dNo);
@@ -235,31 +234,56 @@ var 	_SITE ={
 				console.log(data);
 			
 				// Virify		
-				var i = data.span.length,obj = data.span.reverse(),
+				var i = data.span.length;
+					aj.xchk(SITE,i);
+				// Virify End
+				
+				var obj = data.span.reverse(),
 					MAG = {
 						dDate:SITE.data.dDate,
+						dNo:SITE.data.dNo,
+						d4J:[], 
 						consolation:[],
-						special:[]},
-					dNoRegxp = /\d{4}\s?/ig
-				//aj.xchk(SITE,i);
-				console.log(obj[23].content)
-				//MAG.dDate = aj.getDateRegexp(obj[31].font.content);
-				//MAG.dNo = dNoRegxp.exec(obj[23].content);
-				//MAG.dNo = obj[23].content.match(dNoRegxp);
-				//MAG.first = obj[22];
-				//MAG.second = obj[21];
-				//MAG.third = obj[20];
-			
-		  	while(i--) {
-		  		console.log("obj "+i+" = "+obj[i]);
-		  		if(i < 20 & i >= 0 ){
-			  		if(i < 10){
-			  			MAG.consolation.push(obj[i]);
-			  		}else if(i < 20){
-			  			MAG.special.push(obj[i]);
-			  		}
-		  			}
-		  		}
+						special:[],
+						superemeJ:[],
+						powerJ:[],
+						megaJ:[],
+						d5First:[],
+						d5Second:[],
+						d5Third:[],
+						d6:[]
+						},
+					dNoRegxp = /\d{4}\s?/ig,
+					obj4d = [obj[79]].concat(obj.slice(98,122)),
+					j = obj4d.length;
+				//while(i--){console.log("obj "+i+" = "+obj[i].content);}
+				// 4D	
+				MAG.first = obj4d[24].content;
+				MAG.second = obj4d[23].content;
+				MAG.third = obj4d[22].content;
+				aj.getContent(obj4d.slice(0,2),MAG.d4J);
+				while(j--){
+					//console.log("obj4d "+j+" = "+obj4d[j].content);
+						if(j < 22 & j >= 2 ){
+					  		if(j < 12){
+					  			MAG.consolation.push(obj4d[j].content);
+					  		}else if(j < 22){
+					  			MAG.special.push(obj4d[j].content);
+					  		}
+			  			}
+					}
+				// Jackpot	
+				aj.getContent(obj.slice(72,79),MAG.superemeJ);
+				aj.getContent(obj.slice(65,72),MAG.powerJ);
+				aj.getContent(obj.slice(58,65),MAG.megaJ);
+				// 5D
+				aj.getContent(obj.slice(9,14),MAG.d5First);
+				aj.getContent(obj.slice(0,5),MAG.d5Second);
+				aj.getContent(obj.slice(48,53),MAG.d5Third);
+				// 6D
+				aj.getContent(obj.slice(18,24),MAG.d6);
+
+		  		//console.log("obj4d = " + obj4d)
 		  		console.log("dDate = " + MAG.dDate)
 		  		console.log("dNo = " + MAG.dNo)
 		  		console.log("First = " + MAG.first)
@@ -267,11 +291,15 @@ var 	_SITE ={
 		  		console.log("Third = " + MAG.third)
 		  		console.log("consolation = " + MAG.consolation)
 		  		console.log("special = " + MAG.special)
+		  		console.log("4d Prize = " + MAG.d4J)
+		  		console.log("superemeJ = " + MAG.superemeJ)
+		  		console.log("powerJ = " + MAG.powerJ)
+		  		console.log("d5First = " + MAG.d5First)
+		  		console.log("d5Second = " + MAG.d5Second)
+		  		console.log("d5Third = " + MAG.d5Third)
+		  		console.log("d6 = " + MAG.d6)
 				});
 			});
-		//console.log(ax.site);
-		//console.log(ax.yql);
-		
 	},		
 	ajx : function(SITE,callback){
 		//this.site = SITE;
@@ -293,13 +321,18 @@ var 	_SITE ={
        					}
 				  
 					// Else, Maybe we requested a site that doesn't exist, and nothing returned.
-					else throw new Error('Nothing returned from getJSON.');
-			   		});
+					else throw new Error('Nothing returned from YQL.');
+			   		})
+			   		.error(function() { alert("error"); })
+					.complete(function() { alert("complete"); });
 		
 		   		},
 	rslt : function(){
 		
 	}
 	}
-aj.doTOTO()
+//aj.doTOTO()
+//aj.doSG4D()
+//aj.doPMP()
+aj.doMAG4D()
 
