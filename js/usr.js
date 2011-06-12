@@ -321,18 +321,15 @@ var 	_SITE ={
        					}
 				  
 					// Else, Maybe we requested a site that doesn't exist, and nothing returned.
-					else throw new Error('Nothing returned from YQL.');
+					else throw new Error(SITE.nn+' Nothing returned from YQL.'); 
 			   		})
-			   		.error(function() { alert("error"); })
-					.complete(function() { alert("complete"); });
-		
 		   		},
 	rslt : function(){
 		
 	}
 	}
-//aj.doTOTO()
+aj.doTOTO()
 //aj.doSG4D()
 //aj.doPMP()
-aj.doMAG4D()
+//aj.doMAG4D()
 
