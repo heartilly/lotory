@@ -294,6 +294,7 @@ var 	_SITE ={
 		  		console.log("4d Prize = " + MAG.d4J)
 		  		console.log("superemeJ = " + MAG.superemeJ)
 		  		console.log("powerJ = " + MAG.powerJ)
+		  		console.log("megaJ = " + MAG.megaJ)
 		  		console.log("d5First = " + MAG.d5First)
 		  		console.log("d5Second = " + MAG.d5Second)
 		  		console.log("d5Third = " + MAG.d5Third)
@@ -303,15 +304,7 @@ var 	_SITE ={
 	},		
 	ajx : function(SITE,callback){
 		//this.site = SITE;
-		
-       		this.yql = 'http://query.yahooapis.com/v1/public/yql?q=' + encodeURIComponent('select * from html where url="' + SITE.url + '" AND xpath="'+ SITE.xpath +'" AND charset="'+SITE.charset+'"'+SITE.query) +'&format=json&callback=?';
-       	/* * /
-       if(SITE.query){
-       		this.yql = 'http://query.yahooapis.com/v1/public/yql?q=' + encodeURIComponent('select * from html where url="' + SITE.url + '" AND xpath="'+ SITE.xpath +'" AND charset="'+SITE.charset+'"'+SITE.query) +'&format=json&callback=?';
-			}else{
-       	this.yql = 'http://query.yahooapis.com/v1/public/yql?q=' + encodeURIComponent('select * from html where url="' + SITE.url + '" AND xpath="'+ SITE.xpath +'" AND charset="'+SITE.charset+'"') +'&format=json&callback=?';
-       		}
-       	/* */
+       	this.yql = 'http://query.yahooapis.com/v1/public/yql?q=' + encodeURIComponent('select * from html where url="' + SITE.url + '" AND xpath="'+ SITE.xpath +'" AND charset="'+SITE.charset+'"'+SITE.query) +'&format=json&callback=?';
        	this.ajxr = $.getJSON( this.yql, function cbFunc(data) {
 				  	//console.log(data.query.results);
 				  	if (data.query.results) {
@@ -326,9 +319,20 @@ var 	_SITE ={
 		   		},
 	rslt : function(){
 		
+	},
+	init : function(){
+		$("#totoAct").click(aj.doTOTO);
+		$("#sg4dAct").click(aj.doSG4D);
+		$("#magnumAct").click(aj.doMAG4D);
+		$("#pmpAct").click(aj.doPMP);
+		//aj.doTOTO()
+		//aj.doSG4D()
+		//aj.doPMP()
+		//aj.doMAG4D()	
 	}
 	}
-aj.doTOTO()
+
+$(function(){aj.init()})
 //aj.doSG4D()
 //aj.doPMP()
 //aj.doMAG4D()
