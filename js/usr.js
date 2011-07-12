@@ -29,6 +29,7 @@ var 	_SITE ={
 			xObj:'strong',			
 			xpath:'//strong',
 			query:'',
+			result:[],
 			xCheck:33
 		},
 		TOTO:{
@@ -45,6 +46,24 @@ var 	_SITE ={
 			query:'',
 			xpath:"//span[@class='dataResultA' or @class='dataResultB' or @class='dataJackPrize']",
 			xCheck:122
+		}
+	},
+	cons = {
+		_DRAWNO : "Draw",
+		_DRAWDATE : "Date",
+		dateDay : ["Sun","Mon","Tes","Wed","Thu","Fri","Sat"],
+		buildDate : function(data){
+		var date = data.dDate,day = cons.dateDay[date.getDay()],
+			drawNo = data.dNo,
+			drawDate = date.getDate()+"/"+(date.getMonth()+1),
+			dataTxt = $("<dt style='width:130px'><strong>" + cons._DRAWNO + "&nbsp;</strong><big>" +drawNo +"</big></dt><dt style='width:115px'><strong>" + cons._DRAWDATE + "&nbsp;</strong><big>" + drawDate + "</big></dt><dt><strong></strong><big>"+ day + "</big></dt>");
+		return 	dataTxt;
+			},
+		buildMag : function(data){
+			var idx = $("#magnum").clone();
+			$('.btnAct',idx).hide();
+			$('#magnumDate',idx).append(cons.buildDate(data));
+			idx.replaceAll("#magnum");
 		}
 	},
 	aj = {
@@ -161,7 +180,14 @@ var 	_SITE ={
       		console.log("Third = " + MAG.third)
       		console.log("consolation = " + MAG.consolation)
       		console.log("special = " + MAG.special)
+      			SITE.result = MAG;
 			});
+			//ax.ajxr.resolve(MAG);
+			ax.ajxr.then(function(){
+			cons.buildMag(SITE.result);
+						
+					console.log(SITE.result)}
+			)
 	},
 	doSG4D : function() {
 		var SITE = _SITE.SG4D;
@@ -322,9 +348,11 @@ var 	_SITE ={
 	},
 	init : function(){
 		$("#totoAct").click(aj.doTOTO);
-		$("#sg4dAct").click(aj.doSG4D);
+		$("#sg4dAct").click(aj.doSG4Di);
 		$("#magnumAct").click(aj.doMAG4D);
 		$("#pmpAct").click(aj.doPMP);
+		
+		
 		//aj.doTOTO()
 		//aj.doSG4D()
 		//aj.doPMP()
