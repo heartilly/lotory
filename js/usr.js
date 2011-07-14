@@ -59,11 +59,100 @@ var 	_SITE ={
 			dataTxt = $("<dt style='width:130px'><strong>" + cons._DRAWNO + "&nbsp;</strong><big>" +drawNo +"</big></dt><dt style='width:115px'><strong>" + cons._DRAWDATE + "&nbsp;</strong><big>" + drawDate + "</big></dt><dt><strong></strong><big>"+ day + "</big></dt>");
 		return 	dataTxt;
 			},
+		buildPmpDate : function(data){
+		var date = data.dDate,day = cons.dateDay[date.getDay()],
+			drawNo = data.dNo,
+			drawDate = date.getDate()+"/"+(date.getMonth()+1),
+			dataTxt = $("<dl><dt style='width:130px'><strong>"+cons._DRAWNO+"&nbsp;</strong><big>"+drawNo+"</big></dt><dt style='width:130px'><strong>"+cons._DRAWDATE+"&nbsp;</strong><big>"+drawDate+"</big></dt></dl><dl style=' width: 45px; white-space: pre; overflow: hidden;'><dt ><strong>&nbsp;&nbsp;</strong><big>"+data.dVenue+"</big></dt><dt><strong>&nbsp;&nbsp;</strong><big>"+day+"</big></dt></dl>");
+		return 	dataTxt;
+		},
+		buildJackDate : function(data){
+		var date = data.dDate,day = cons.dateDay[date.getDay()],
+			drawNo = data.dNo,
+			drawDate = date.getDate()+"/"+(date.getMonth()+1),
+			dataTxt = $("<dt style='width:110px'><strong>" +cons._DRAWNO + "&nbsp;</strong><big>" + drawNo +"</big></dt><dt style='width:110px'><strong>" + cons._DRAWDATE + "&nbsp;</strong><big>" + drawDate + "</big></dt><dt><strong></strong><big>"+ day + "</big></dt>");
+		return 	dataTxt;
+		},
+		buildTop3 : function(first,second,third){
+			var topTxt = $("<dt>"+first+"</dt><dt class='top3middle'>"+second+"</dt><dt>"+third+"</dt>");
+			return topTxt;
+			},
+		buildSubPrice : function(data){
+		    var	docFragment = document.createDocumentFragment(),
+                obj = data,i = obj.length;
+              
+           while(i--) {	
+           		var h4 = document.createElement("h4");
+           			h4.innerHTML=obj[i];
+                    docFragment.appendChild(h4);
+                      }
+            return docFragment;
+			},
+		buildJackNo : function(data){
+		    var	docFragment = document.createDocumentFragment(),
+                obj = data,i = obj.length;
+              
+           while(i--) {	
+           		var td = document.createElement("td");
+           			td.innerHTML=obj[i];
+                    docFragment.appendChild(td);
+                      }
+            return docFragment;
+			},
+		buildDDNo : function(data,array){
+		    var	docFragment = document.createDocumentFragment(),
+                obj = data,i = obj.length, con = array;
+              
+           while(i--) {	
+           			con[i].innerHTML=obj[i];
+                    docFragment.appendChild(con[i]);
+                      }
+            return docFragment;
+			},
 		buildMag : function(data){
 			var idx = $("#magnum").clone();
 			$('.btnAct',idx).hide();
+			$('#magnumTop3',idx).append(cons.buildTop3(data.first,data.second,data.third));
 			$('#magnumDate',idx).append(cons.buildDate(data));
+			$('#magnumCon',idx).append(cons.buildSubPrice(data.consolation));
+			$('#magnumSpe',idx).append(cons.buildSubPrice(data.special));
 			idx.replaceAll("#magnum");
+		},	
+		buildPmp : function(data){
+			var idx = $("#pmp").clone();
+			$('.btnAct',idx).hide();
+			$('#pmp3dTop3',idx).append(cons.buildTop3(data.first3,data.second3,data.third3));
+			$('#pmp4dTop3',idx).append(cons.buildTop3(data.first,data.second,data.third));
+			$('#datePmp',idx).append(cons.buildPmpDate(data));
+			$('#pmp4dCon',idx).append(cons.buildSubPrice(data.consolation));
+			$('#pmp4dSpe',idx).append(cons.buildSubPrice(data.special));
+			idx.replaceAll("#pmp");
+		},
+		buildSg4d : function(data){
+			var idx = $("#sg4d").clone();
+			$('.btnAct',idx).hide();
+			$('#sg4dTop3',idx).append(cons.buildTop3(data.first,data.second,data.third));
+			$('#sg4dDate',idx).append(cons.buildDate(data));
+			$('#sg4dCon',idx).append(cons.buildSubPrice(data.consolation));
+			$('#sg4dSpe',idx).append(cons.buildSubPrice(data.special));
+			idx.replaceAll("#sg4d");
+		},
+		buildToto : function(data){
+			var mum = $("#totoAll").clone(),idx = $("#toto4d",mum),idx2 = $("#totoJackpot",mum);
+			$('.btnAct2',mum).hide();
+			$('#toto4dTop3',idx).append(cons.buildTop3(data.first,data.second,data.third));
+			$('#toto4dDate',idx).append(cons.buildDate(data));
+			$('#totoJackpotDate',idx2).append(cons.buildJackDate(data));
+			$('#totoMegaResult',idx2).append(cons.buildJackNo(data.superemeJ));
+			$('#amount0',idx2).html(data.superemeJp);
+			$('#totoSuperResult',idx2).append(cons.buildJackNo(data.powerJ));
+			$('#amount1',idx2).html(data.powerJp);
+			$('#totoJackpotResult',idx2).append(cons.buildJackNo(data.megaJ));
+			$('#amount2',idx2).html(data.megaJp);
+			$('#toto4dCon',idx).append(cons.buildSubPrice(data.consolation));
+			$('#toto4dSpe',idx).append(cons.buildSubPrice(data.special));
+			$('.result5dContainer',idx2).append(cons.buildDDNo(data.d5First,this);
+			mum.replaceAll("#totoAll");
 		}
 	},
 	aj = {
@@ -112,6 +201,7 @@ var 	_SITE ={
 
 			MAG.dDate = aj.getDateRegexp(obj[39]);
 			MAG.dNo = obj[38].replace(dNoRegxp,'');
+			MAG.dVenue = obj[37];
 			MAG.venue = obj[37];
 			MAG.first = obj[27];
 			MAG.second = obj[25];
@@ -133,6 +223,7 @@ var 	_SITE ={
       		console.log("dDate = " + MAG.dDate)
       		console.log("dNo = " + MAG.dNo)
       		console.log("First3 = " + MAG.first3)
+      		console.log("dVenue = " + MAG.dVenue)
       		console.log("Second3 = " + MAG.second3)
       		console.log("Third3 = " + MAG.third3)
       		console.log("First = " + MAG.first)
@@ -140,9 +231,14 @@ var 	_SITE ={
       		console.log("Third = " + MAG.third)
       		console.log("special = " + MAG.special)
       		console.log("consolation = " + MAG.consolation)
+				SITE.result = MAG;
 			});
-		console.log(ax.site);
-		console.log(ax.yql);
+			//ax.ajxr.resolve(MAG);
+			ax.ajxr.then(function(){
+			cons.buildPmp(SITE.result);
+						
+			console.log(SITE.result)}
+			)
 	},
 	doMAG4D : function() {
 		var SITE = _SITE.MAG4D,
@@ -201,7 +297,7 @@ var 	_SITE ={
 				console.log("url = " +SITE.url);
 				console.log("data = " +SITE.data.dDate);
 			
-				aj.ajx(SITE, function(data,SITE){
+				var ax = new aj.ajx(SITE, function(data,SITE){
 				console.log(data);
 			
 				// Virify		
@@ -237,8 +333,16 @@ var 	_SITE ={
 		  		console.log("Third = " + MAG.third)
 		  		console.log("consolation = " + MAG.consolation)
 		  		console.log("special = " + MAG.special)
-				});
+				SITE.result = MAG;
 			});
+			//ax.ajxr.resolve(MAG);
+			ax.ajxr.then(function(){
+			cons.buildSg4d(SITE.result);
+						
+					console.log(SITE.result)}
+			)
+			});
+			
 		
 	},
 	doTOTO : function() {
@@ -256,7 +360,7 @@ var 	_SITE ={
 				console.log("data = " +SITE.data.dDate);
 				console.log("data = " +SITE.data.dNo);
 			
-				aj.ajx(SITE, function(data,SITE){
+				var ax = new aj.ajx(SITE, function(data,SITE){
 				console.log(data);
 			
 				// Virify		
@@ -272,8 +376,11 @@ var 	_SITE ={
 						consolation:[],
 						special:[],
 						superemeJ:[],
+						superemeJp:obj[72].content,
 						powerJ:[],
+						powerJp:obj[65].content,
 						megaJ:[],
+						megaJp:obj[58].content,
 						d5First:[],
 						d5Second:[],
 						d5Third:[],
@@ -299,9 +406,9 @@ var 	_SITE ={
 			  			}
 					}
 				// Jackpot	
-				aj.getContent(obj.slice(72,79),MAG.superemeJ);
-				aj.getContent(obj.slice(65,72),MAG.powerJ);
-				aj.getContent(obj.slice(58,65),MAG.megaJ);
+				aj.getContent(obj.slice(73,79),MAG.superemeJ);
+				aj.getContent(obj.slice(66,72),MAG.powerJ);
+				aj.getContent(obj.slice(59,65),MAG.megaJ);
 				// 5D
 				aj.getContent(obj.slice(9,14),MAG.d5First);
 				aj.getContent(obj.slice(0,5),MAG.d5Second);
@@ -319,13 +426,23 @@ var 	_SITE ={
 		  		console.log("special = " + MAG.special)
 		  		console.log("4d Prize = " + MAG.d4J)
 		  		console.log("superemeJ = " + MAG.superemeJ)
+		  		console.log("superemeJp = " + MAG.superemeJp)
 		  		console.log("powerJ = " + MAG.powerJ)
+		  		console.log("powerJp = " + MAG.powerJp)
 		  		console.log("megaJ = " + MAG.megaJ)
+		  		console.log("megaJp = " + MAG.megaJp)
 		  		console.log("d5First = " + MAG.d5First)
 		  		console.log("d5Second = " + MAG.d5Second)
 		  		console.log("d5Third = " + MAG.d5Third)
 		  		console.log("d6 = " + MAG.d6)
-				});
+				SITE.result = MAG;
+			});
+			//ax.ajxr.resolve(MAG);
+			ax.ajxr.then(function(){
+			cons.buildToto(SITE.result);
+						
+					console.log(SITE.result)}
+			)
 			});
 	},		
 	ajx : function(SITE,callback){
@@ -348,7 +465,7 @@ var 	_SITE ={
 	},
 	init : function(){
 		$("#totoAct").click(aj.doTOTO);
-		$("#sg4dAct").click(aj.doSG4Di);
+		$("#sg4dAct").click(aj.doSG4D);
 		$("#magnumAct").click(aj.doMAG4D);
 		$("#pmpAct").click(aj.doPMP);
 		
