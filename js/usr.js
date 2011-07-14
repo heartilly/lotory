@@ -99,9 +99,9 @@ var 	_SITE ={
                       }
             return docFragment;
 			},
-		buildDDNo : function(data,array){
+		buildDDNo : function(data,this){
 		    var	docFragment = document.createDocumentFragment(),
-                obj = data,i = obj.length, con = array;
+                obj = data,i = obj.length, con = $(array);
               
            while(i--) {	
            			con[i].innerHTML=obj[i];
