@@ -99,16 +99,7 @@ var 	_SITE ={
                       }
             return docFragment;
 			},
-		buildDDNo : function(data,this){
-		    var	docFragment = document.createDocumentFragment(),
-                obj = data,i = obj.length, con = $(array);
-              
-           while(i--) {	
-           			con[i].innerHTML=obj[i];
-                    docFragment.appendChild(con[i]);
-                      }
-            return docFragment;
-			},
+		
 		buildMag : function(data){
 			var idx = $("#magnum").clone();
 			$('.btnAct',idx).hide();
@@ -151,7 +142,11 @@ var 	_SITE ={
 			$('#amount2',idx2).html(data.megaJp);
 			$('#toto4dCon',idx).append(cons.buildSubPrice(data.consolation));
 			$('#toto4dSpe',idx).append(cons.buildSubPrice(data.special));
-			$('.result5dContainer',idx2).append(cons.buildDDNo(data.d5First,this);
+			//$('.result5dContainer',$('#toto5d',idx2)).append(cons.buildDDNo(data.d5First));
+			$('.result5dContainer',idx2).each(function(idx,ele){
+				var obj = $("td",ele);
+					obj.buildDDNo(data.d5First);
+				})
 			mum.replaceAll("#totoAll");
 		}
 	},
@@ -477,6 +472,17 @@ var 	_SITE ={
 	}
 	}
 
+$.fn.extend({
+	buildDDNo:function(data){
+		    var	obj = data,i = obj.length, con=this;
+              console.log(obj);
+              console.log(i);
+              console.log(con.length);
+           while(i--) {	
+           			con[i].innerHTML=obj[i];
+                      }
+			}})
+			
 $(function(){aj.init()})
 //aj.doSG4D()
 //aj.doPMP()
