@@ -270,7 +270,7 @@ padding:5px 3px 4px 0;
 text-indent:50px;
 }
 .indent6{
-margin-left:20px;
+margin:0 10px;
 
 }
 .nowrap{
@@ -304,8 +304,8 @@ table.toto5dResultRest{
 	border-spacing: 1px;
 	}
 .toto5dResultRest td{
-width:26px;
-height:25px;
+width:21px;
+height:24px;
 font-size:1.2em;
 font-family:Rock Well Condensed,impact;
 text-align:center;

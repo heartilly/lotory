@@ -142,10 +142,15 @@ var 	_SITE ={
 			$('#amount2',idx2).html(data.megaJp);
 			$('#toto4dCon',idx).append(cons.buildSubPrice(data.consolation));
 			$('#toto4dSpe',idx).append(cons.buildSubPrice(data.special));
-			//$('.result5dContainer',$('#toto5d',idx2)).append(cons.buildDDNo(data.d5First));
+			$('.result5d2ndContainer',idx2).children().buildDDNo(data.d5Second);
+			$('.result5d3rdContainer',idx2).children().buildDDNo(data.d5Third);
 			$('.result5dContainer',idx2).each(function(idx,ele){
 				var obj = $("td",ele);
 					obj.buildDDNo(data.d5First);
+				})
+			$('.result6dContainer',idx2).each(function(idx,ele){
+				var obj = $("td",ele);
+					obj.buildDDNo(data.d6);
 				})
 			mum.replaceAll("#totoAll");
 		}
@@ -405,11 +410,11 @@ var 	_SITE ={
 				aj.getContent(obj.slice(66,72),MAG.powerJ);
 				aj.getContent(obj.slice(59,65),MAG.megaJ);
 				// 5D
-				aj.getContent(obj.slice(9,14),MAG.d5First);
-				aj.getContent(obj.slice(0,5),MAG.d5Second);
-				aj.getContent(obj.slice(48,53),MAG.d5Third);
+				aj.getContent(obj.slice(9,14).reverse(),MAG.d5First);
+				aj.getContent(obj.slice(0,5).reverse(),MAG.d5Second);
+				aj.getContent(obj.slice(48,53).reverse(),MAG.d5Third);
 				// 6D
-				aj.getContent(obj.slice(18,24),MAG.d6);
+				aj.getContent(obj.slice(18,24).reverse(),MAG.d6);
 
 		  		//console.log("obj4d = " + obj4d)
 		  		console.log("dDate = " + MAG.dDate)
@@ -472,16 +477,12 @@ var 	_SITE ={
 	}
 	}
 
-$.fn.extend({
-	buildDDNo:function(data){
+$.fn.buildDDNo= function(data){
 		    var	obj = data,i = obj.length, con=this;
-              console.log(obj);
-              console.log(i);
-              console.log(con.length);
            while(i--) {	
            			con[i].innerHTML=obj[i];
                       }
-			}})
+			}
 			
 $(function(){aj.init()})
 //aj.doSG4D()
