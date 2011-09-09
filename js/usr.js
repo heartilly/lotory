@@ -52,24 +52,29 @@ var 	_SITE ={
 		_DRAWNO : "Draw",
 		_DRAWDATE : "Date",
 		dateDay : ["Sun","Mon","Tes","Wed","Thu","Fri","Sat"],
+		dateDayDisplay : ["ahad","isnin","selasa","rabu","khamis","jumaat","sabtu"],
 		buildDate : function(data){
 		var date = data.dDate,day = cons.dateDay[date.getDay()],
 			drawNo = data.dNo,
-			drawDate = date.getDate()+"/"+(date.getMonth()+1),
+			drawDate = cons.getDisplayDate(date),
 			dataTxt = $("<dt style='width:130px'><strong>" + cons._DRAWNO + "&nbsp;</strong><big>" +drawNo +"</big></dt><dt style='width:115px'><strong>" + cons._DRAWDATE + "&nbsp;</strong><big>" + drawDate + "</big></dt><dt><strong></strong><big>"+ day + "</big></dt>");
 		return 	dataTxt;
+			},
+		getDisplayDate : function(date){
+			var displayDate = date.getDate()+"/"+(date.getMonth()+1);
+			return displayDate;
 			},
 		buildPmpDate : function(data){
 		var date = data.dDate,day = cons.dateDay[date.getDay()],
 			drawNo = data.dNo,
-			drawDate = date.getDate()+"/"+(date.getMonth()+1),
+			drawDate = cons.getDisplayDate(date),
 			dataTxt = $("<dl><dt style='width:130px'><strong>"+cons._DRAWNO+"&nbsp;</strong><big>"+drawNo+"</big></dt><dt style='width:130px'><strong>"+cons._DRAWDATE+"&nbsp;</strong><big>"+drawDate+"</big></dt></dl><dl style=' width: 45px; white-space: pre; overflow: hidden;'><dt ><strong>&nbsp;&nbsp;</strong><big>"+data.dVenue+"</big></dt><dt><strong>&nbsp;&nbsp;</strong><big>"+day+"</big></dt></dl>");
 		return 	dataTxt;
 		},
 		buildJackDate : function(data){
 		var date = data.dDate,day = cons.dateDay[date.getDay()],
 			drawNo = data.dNo,
-			drawDate = date.getDate()+"/"+(date.getMonth()+1),
+			drawDate = cons.getDisplayDate(date),
 			dataTxt = $("<dt style='width:110px'><strong>" +cons._DRAWNO + "&nbsp;</strong><big>" + drawNo +"</big></dt><dt style='width:110px'><strong>" + cons._DRAWDATE + "&nbsp;</strong><big>" + drawDate + "</big></dt><dt><strong></strong><big>"+ day + "</big></dt>");
 		return 	dataTxt;
 		},
@@ -107,6 +112,8 @@ var 	_SITE ={
 			$('#magnumDate',idx).append(cons.buildDate(data));
 			$('#magnumCon',idx).append(cons.buildSubPrice(data.consolation));
 			$('#magnumSpe',idx).append(cons.buildSubPrice(data.special));
+			$('#printDate').html(cons.getDisplayDate(data.dDate)+"/"+data.dDate.getFullYear());
+			$('#printDay').html(cons.dateDayDisplay[data.dDate.getDay()]);
 			idx.replaceAll("#magnum");
 		},	
 		buildPmp : function(data){
