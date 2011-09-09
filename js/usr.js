@@ -475,7 +475,9 @@ var 	_SITE ={
 		$("#sg4dAct").click(aj.doSG4D);
 		$("#magnumAct").click(aj.doMAG4D);
 		$("#pmpAct").click(aj.doPMP);
-		
+		$(".delMe").click(function removeCon(){
+			$(this).closest('div[id]').remove();
+		})
 		
 		//aj.doTOTO()
 		//aj.doSG4D()

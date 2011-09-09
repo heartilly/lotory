@@ -267,10 +267,10 @@ font-weight:bold;
 padding:5px 3px 4px 0;
 }
 .indent{
-text-indent:50px;
+margin:0 0 0 40px;
 }
 .indent6{
-margin:0 10px;
+margin:0 6px;
 
 }
 .nowrap{
@@ -454,11 +454,13 @@ text-transform:uppercase;
 #printDate{
 float:right;
 font-size:110px;
-font-style:italic;
 font-family:impact;
 margin:10px 10px 10px 10px ;
--moz-transform:rotate(90deg);
--webkit-transform:rotate(90deg);
+
+transform:rotate(90deg) skewX(-15deg);
+-moz-transform:rotate(90deg) skewX(-15deg);
+-o-transform:rotate(90deg) skewX(-15deg);
+-webkit-transform:rotate(90deg) skewX(-15deg);
 width:120px;
 position:relative;
 top:0px;
@@ -469,6 +471,15 @@ height:600px;
 background:#ffffff;
 }
 #amount3{display:none;}
+
+.w180{width:180px;}
+
+/* Border style * /
+.bt{border-top:1px solid #111111}
+.br{border-right:1px solid #111111}
+.bl{border-left:1px solid #111111}
+.bb{border-bottom:1px solid #111111}
+/* */
 /* #printDate,.obj{
 height:100%;
 } */
