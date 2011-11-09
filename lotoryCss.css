@@ -444,6 +444,7 @@ top:150px;
 .intraactive:hover{
 background:transparent url(./images/dw.png) no-repeat 130px;
 }
+/* * /
 #printDay{
 font-family:impact;
 font-size:113px;
@@ -465,6 +466,7 @@ width:120px;
 position:relative;
 top:0px;
 }
+/* */
 .obj{
 width:120px;
 height:600px;
@@ -480,6 +482,16 @@ background:#ffffff;
 .bl{border-left:1px solid #111111}
 .bb{border-bottom:1px solid #111111}
 /* */
+
+#printPrice {
+float:left;
+font-family:impact;
+font-size:120px;
+font-weight:bold;
+line-height:140px;
+margin:0 5px 30px 10px;
+}
+
 /* #printDate,.obj{
 height:100%;
 } */
@@ -489,3 +501,21 @@ background:#c9c9c9;
 /* {
 width:310px;
 } */
+#printDay {
+font-family:impact;
+font-size:113px;
+margin:20px 5px 5px;
+text-align:center;
+text-transform:uppercase;
+}
+#printDate {
+-moz-transform:rotate(90deg);
+-webkit-transform:rotate(90deg);
+float:right;
+font-family:impact;
+font-size:110px;
+margin:20px 0 0;
+position:relative;
+top:0;
+width:120px;
+}
